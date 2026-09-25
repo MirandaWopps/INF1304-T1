@@ -4,6 +4,7 @@ metadata:
   name: factoryflow-ingress   # Name of the Ingress resource
   namespace: factoryflow      # Namespace where the Ingress resource is created
 spec:
+  ingressClassName: traefik
   rules:
   - http:                     # HTTP rule for routing traffic to services based on the request path
       paths:
@@ -13,4 +14,4 @@ spec:
           service:
             name: web-service # Name of the backend service to route traffic to
             port:
-              number: 8000    # Port number of the backend service to route traffic to
+              number: 80    # Port number of the backend service to route traffic to

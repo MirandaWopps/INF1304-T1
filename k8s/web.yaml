@@ -18,10 +18,12 @@ spec:
       labels:
         app: web  # rótulo para identificar os pods deste deployment
     spec:
+      nodeSelector:
+        web: "true"
       containers:
       - name: web   # nome do container
-        image: factoryflow-web:v2 # imagem do container (deve ser construída e disponível localmente) 
-        imagePullPolicy: Never
+        image: miyaaaa/factoryflow:v4 # imagem do container (deve ser construída e disponível localmente) 
+        imagePullPolicy: Always
         resources:    # adcionado para evitar: One or more containers do not have resources - this can cause noisy neighbor issues
           requests:
             memory: "128Mi"

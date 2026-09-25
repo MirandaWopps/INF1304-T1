@@ -28,6 +28,8 @@ spec:
       labels:
         app: rabbitmq       # Label to identify the pods created by this deployment. In this case, it assigns the label "app: rabbitmq" to the pods.
     spec:
+      nodeSelector:
+        rabbitmq: "true"
       containers:
       - name: rabbitmq
         image: rabbitmq:3-management

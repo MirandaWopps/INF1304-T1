@@ -69,7 +69,7 @@ def health(request):
         "status": "ok",
         "pod": os.uname().nodename,
         "timestamp": datetime.now().isoformat(),
-        'version': '1',
+        'version': '2',
     }
     return JsonResponse(json_response)
 

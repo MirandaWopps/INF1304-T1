@@ -28,6 +28,8 @@ spec:
       labels:
         app: mysql
     spec:
+      nodeSelector:
+        mysql: "true"
       containers:
       - name: mysql
         image: mysql:latest
