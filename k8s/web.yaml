@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment          # tipo de recurso: Deployment
+metadata:
+  name: web-deployment    # nome do deployment
+  namespace: factoryflow  # namespace onde o deployment será criado
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1 # quantidade máxima de pods que podem estar indisponíveis durante a atualização
+      maxSurge: 1       # quantidade máxima de pods que podem ser criados além do número desejado durante a atualização
+  selector:
+    matchLabels:
+      app: web  # rótulo para identificar os pods deste deployment
+  template:
+    metadata:
+      labels:
+        app: web  # rótulo para identificar os pods deste deployment
+    spec:
+      containers:
+      - name: web   # nome do container
+        image: factoryflow-web:v2 # imagem do container (deve ser construída e disponível localmente) 
+        imagePullPolicy: Never
+        resources:    # adcionado para evitar: One or more containers do not have resources - this can cause noisy neighbor issues
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8000
+        readinessProbe:  # configuração da readiness probe
+          httpGet:
+            path: /api/v1/readiness  # endpoint para verificar a saúde do container
+            port: 8000
+          initialDelaySeconds: 5  # tempo de espera antes de iniciar as verificações
+          periodSeconds: 5       # intervalo entre as verificações
+        livenessProbe:   # configuração da liveness probe
+          httpGet:
+            path: /api/v1/liveness  # endpoint para verificar se o container está vivo
+            port: 8000
+          initialDelaySeconds: 10 # tempo de espera antes de iniciar as verificações
+          periodSeconds: 10      # intervalo entre as verificações
+---
+apiVersion: v1
+kind: Service             # tipo de recurso: Service
+metadata:
+  name: web-service       # nome do serviço
+  namespace: factoryflow  # namespace onde o serviço será criado
+spec:
+  selector:
+    app: web              # seleciona os pods com o rótulo "app: web" para direcionar o tráfego
+  ports:
+  - port: 80            # porta exposta pelo serviço para receber o tráfego
+    targetPort: 8000    # porta no container para onde o tráfego será direcionado

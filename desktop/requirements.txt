@@ -1,0 +1,2 @@
+pika        # RabbitMQ client library for Python
+dotenv      # For managing environment variables
